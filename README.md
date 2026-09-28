@@ -2,7 +2,17 @@
 
 This is a German webapp where you can input and save ingredients for recipes and also recalculate proportions.
 
-To start this app, you can create a new .bat-file with following code:
+
+**Setup:**
+
+To use this app, you first need to install project dependencies.
+In cmd or PowerShell in your project folder, run
+
+```
+npm install
+```
+
+You can then create a new .bat-file with following code:
 
 ```
 @echo off
@@ -11,7 +21,8 @@ start http://localhost:5173
 npm run dev
 ```
 
-Save this, then you can run the app.
+Note that you have to use the path where your recipe-calculator is located in.
+Save this and run to start the app.
 
 
 **Features:**
