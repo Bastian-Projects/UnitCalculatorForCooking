@@ -1,16 +1,7 @@
 import { useState, useEffect, type FormEvent } from 'react';
-import { volumeFactors, massFactors, type MeasurementCategory } from './utils/conversion';
+import { volumeFactors, massFactors, type MeasurementCategory, type Ingredient, convertIngredients } from './utils/conversion';
 import './App.css'
 
-interface Ingredient {
-    id: string;
-    name: string;
-    amount: number;
-    unit: string;
-    category: MeasurementCategory;
-    convertedAmount?: number;
-    convertedUnit?: string;
-}
 const STORAGE_KEY = 'recipe_calculator_ingredients';
 function App() {
     const [ingredients, setIngredients] = useState<Ingredient[]>(() => {
@@ -71,38 +62,7 @@ function App() {
     //};
 
     const handleConversion = () => {
-        const convertedList = ingredients.map((ing) => {
-            let targetAmount = 0;
-            let targetUnit = '';
-
-            if (ing.category === 'volume') {
-                const baseAmountInMl = ing.amount * volumeFactors[ing.unit];
-                targetAmount = baseAmountInMl * ratio;
-
-                if (targetAmount >= 1000) {
-                    targetAmount = targetAmount / 1000;
-                    targetUnit = 'l';
-                } else {
-                    targetUnit = 'ml';
-                }
-            } else if (ing.category === 'mass') {
-                const baseAmountInG = ing.amount * massFactors[ing.unit];
-                targetAmount = baseAmountInG * ratio;
-
-                if (targetAmount >= 1000) {
-                    targetAmount = targetAmount / 1000;
-                    targetUnit = 'kg';
-                } else {
-                    targetUnit = 'g';
-                }
-            }
-            //ToDo: Pfeiltasten bei Menge und Verhältnis entfernen. 0 beim Verhältnis zulassen, aber nicht berechnen lassen.
-            return {
-                ...ing,
-                convertedAmount: parseFloat(targetAmount.toFixed(3)),
-                convertedUnit: targetUnit,
-            }
-        });
+        const convertedList = convertIngredients(ingredients,ratio);
         setIngredients(convertedList);
     };
 
