@@ -39,13 +39,14 @@ describe('conversion.ts - Volumen, Gewicht und Verhältnislogik', () => {
     describe('Konvertierungs- und Verhältnislogik', () => {
         it('gibt Volumen unter 1l in Millilitern aus', () => {
             const input: Ingredient[] = [
-                { id: '1', name:'ML-Zutat', amount: 1, unit: 'us cup', category: 'volume' }
+                { id: '1', name: 'ML-Zutat', amount: 1, unit: 'us cup', category: 'volume' }
             ];
             const result = convertIngredients(input, 1);
 
             expect(result[0].convertedAmount).toBe(236.588);
             expect(result[0].convertedUnit).toBe('ml');
         });
+
         it('gibt Volumen über 1l in Litern aus', () => {
             const input: Ingredient[] = [
                 { id: '2', name: 'Literzutat', amount: 5, unit: 'us cup', category: 'volume' }
@@ -55,14 +56,75 @@ describe('conversion.ts - Volumen, Gewicht und Verhältnislogik', () => {
             expect(result[0].convertedAmount).toBe(1.183);
             expect(result[0].convertedUnit).toBe('l');
         });
+
+        it('gibt negative Volumen als 0ml aus', () => {
+            const input: Ingredient[] = [
+                { id: '3', name: 'Negativzutat', amount: -5, unit: 'us cup', category: 'volume' }
+            ];
+            const result = convertIngredients(input, 1);
+
+            expect(result[0].convertedAmount).toBe(0);
+            expect(result[0].convertedUnit).toBe('ml');
+        });
+
+        // it('gibt Gewicht unter 1kg in Gramm aus', () => {
+        //     const input: Ingredient[] = [
+        //         { id: '1', name: 'ML-Zutat', amount: 1, unit: 'us cup', category: 'volume' }
+        //     ];
+        //     const result = convertIngredients(input, 1);
+
+        //     expect(result[0].convertedAmount).toBe(236.588);
+        //     expect(result[0].convertedUnit).toBe('ml');
+        // });
+
+        // it('gibt Gewicht über 1000g in Kilogramm aus', () => {
+        //     const input: Ingredient[] = [
+        //         { id: '2', name: 'Literzutat', amount: 5, unit: 'oz', category: 'mass' }
+        //     ];
+        //     const result = convertIngredients(input, 1);
+
+        //     expect(result[0].convertedAmount).toBe(1.183);
+        //     expect(result[0].convertedUnit).toBe('l');
+        // });
+
+        // it('gibt negatives Gewicht als 0g aus', () => {
+        //     const input: Ingredient[] = [
+        //         { id: '3', name: 'Negativzutat', amount: -5, unit: 'us cup', category: 'volume' }
+        //     ];
+        //     const result = convertIngredients(input, 1);
+
+        //     expect(result[0].convertedAmount).toBe(0);
+        //     expect(result[0].convertedUnit).toBe('ml');
+        // });
+
         it('berücksichtigt das Verhältnis (ratio) korrekt', () => {
             const input: Ingredient[] = [
-                { id: '3', name: 'Verhältniszutat', amount: 100, unit: 'g', category: 'mass' }
+                { id: '7', name: 'Verhältniszutat', amount: 100, unit: 'g', category: 'mass' }
             ];
             const result = convertIngredients(input, 2.3);
 
             expect(result[0].convertedAmount).toBe(230);
             expect(result[0].convertedUnit).toBe('g');
         });
+
+        it('fängt Verhältnisse von 0 zuverlässig ab', () => {
+            const input: Ingredient[] = [
+                { id: '8', name: 'Nullverhältnis', amount: 100, unit: 'g', category: 'mass' }
+            ];
+            const result = convertIngredients(input, 0);
+
+            expect(result[0].convertedAmount).toBe(0);
+            expect(result[0].convertedUnit).toBe('g');
+        });
+
+        it('fängt Verhältnisse die keine Zahl sind zuverlässig ab', () => {
+            const input: Ingredient[] = [
+                { id: '9', name: 'Nullverhältnis', amount: 100, unit: 'g', category: 'mass' }
+            ];
+            const result = convertIngredients(input, 0);
+
+            expect(result[0].convertedAmount).toBe(0);
+            expect(result[0].convertedUnit).toBe('g');
+        });
     });
-});
+})

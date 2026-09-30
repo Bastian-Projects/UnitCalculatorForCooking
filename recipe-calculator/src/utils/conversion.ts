@@ -35,6 +35,8 @@ export function convertIngredients(
     ratio: number
 ): Ingredient[] {
     return ingredients.map((ing) => {
+        //Todo: Meldung einfügen, dass negative Mengen nicht erlaubt sind
+        if (ing.amount < 0) ing.amount = 0;
         let targetAmount = 0;
         let targetUnit = '';
 
